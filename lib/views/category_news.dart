@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../components/category.dart';
+import '../models/show_category.dart';
+
 class CategoryNews extends StatefulWidget {
   String name;
 
@@ -11,6 +14,24 @@ class CategoryNews extends StatefulWidget {
 }
 
 class _CategoryNewsState extends State<CategoryNews> {
+  List<ShowCategoryModel> categories = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getNews();
+  }
+
+  getNews() async {
+    ShowCategoryNews showCategoryNews = ShowCategoryNews();
+    await showCategoryNews.getCategoriesNews(widget.name.toLowerCase());
+    categories = showCategoryNews.categories;
+    setState(() {
+      _loading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,8 +45,16 @@ class _CategoryNewsState extends State<CategoryNews> {
         ),
       ),
       body: Container(
-        child: ListView.builder(itemBuilder: itemBuilder)
-      ),
+          child: ListView.builder(
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                return ShowCategory(
+                    Image: categories[index].urlToImage!,
+                    title: categories[index].title!,
+                    desc: categories[index].description!);
+              })),
     );
   }
 }
@@ -38,17 +67,45 @@ class ShowCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          CachedNetworkImage(
-            imageUrl: Image,
-            width: MediaQuery.sizeOf(context).width,
-            height: 200,
-            fit: BoxFit.cover,
-          ),
-          Text(title),
-          Text(desc),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: CachedNetworkImage(
+                imageUrl: Image,
+                width: MediaQuery.sizeOf(context).width,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 2,
+            ),
+            SizedBox(
+              height: 2,
+            ),
+            Text(
+              desc,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
       ),
     );
   }

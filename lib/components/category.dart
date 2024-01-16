@@ -1,19 +1,14 @@
 import 'dart:convert';
 
-import 'package:akashnews/models/slider_model.dart';
-
 import 'package:http/http.dart' as http;
 
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import '../models/show_category.dart';
 
 class ShowCategoryNews {
-  List<ShowCategoryNews> categories = [];
+  List<ShowCategoryModel> categories = [];
 
-  Future<void> getCategoriesNews() async {
-    String url = "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=d202866bc01f40ffb9e2c2e184e78a76";
-    // "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=d202866bc01f40ffb9e2c2e184e78a76";
+  Future<void> getCategoriesNews(String category) async {
+    String url ="https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=d202866bc01f40ffb9e2c2e184e78a76";
 
     var response = await http.get(Uri.parse(url));
 
@@ -22,7 +17,7 @@ class ShowCategoryNews {
     if (jsonData['status'] == 'ok') {
       jsonData["articles"].forEach((element) {
         if (element["urlToImage"] != null && element['description'] != null) {
-          sliderModel slidermodel = sliderModel(
+          ShowCategoryModel categorymodel = ShowCategoryModel(
             title: element["title"],
             description: element["description"],
             url: element["url"],
@@ -30,7 +25,7 @@ class ShowCategoryNews {
             content: element["content"],
             author: element["author"],
           );
-          sliders.add(slidermodel);
+          categories.add(categorymodel);
         }
       });
     }

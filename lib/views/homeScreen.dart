@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:io' show Platform;
 import '../models/article_model.dart';
+import 'category_news.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -295,10 +296,10 @@ class CategoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => CategoryNews(name: categoryName)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CategoryNews(name: categoryName)));
       },
       child: Container(
         margin: EdgeInsets.only(right: 16),
@@ -350,7 +351,11 @@ class BlogTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ArticleView(blogUrl:url,)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => ArticleView(
+                      blogUrl: url,
+                    )));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10.0),
